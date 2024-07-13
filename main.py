@@ -3,7 +3,7 @@ from telethon import TelegramClient, events
 import yt_dlp
 import re
 
-# إعدادات عميل Telegram من config.py
+
 from config import API_ID, API_HASH, BOT_TOKEN
 
 # إنشاء عميل Telegram
