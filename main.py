@@ -46,6 +46,7 @@ async def handler(event):
             await client.send_file(event.chat_id, video_path)
             os.remove(video_path)
             await event.respond(f'**تم تحميل الفيديو بنجاح✅**')
+        else:
             await event.respond('**فشل في تحميل الفيديو❌**')
 
 # بدء العميل
