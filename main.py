@@ -40,15 +40,18 @@ async def handler(event):
     elif urls:
         url = urls[0]
         await event.respond('**جاري تحميل الفيديو...**')
+        await asyncio.sleep(2)
+        await status_message.delete()
         
         video_path = download_video(url)
         if video_path:
             await client.send_file(event.chat_id, video_path)
             os.remove(video_path)
             await event.respond(f'**تم تحميل الفيديو بنجاح✅**')
+            
         else:
             await event.respond('**فشل في تحميل الفيديو❌**')
-        await status_message.delete()
+        
 
 # بدء العميل
 client.start()
