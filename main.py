@@ -30,22 +30,23 @@ def download_video(url):
 # حدث لمعالجة الأوامر
 @client.on(events.NewMessage)
 async def handler(event):
+    id = event.sender_id
+        men = f"[{event.sender.first_name}](tg://user?id={id})"
     # تحقق مما إذا كانت الرسالة تحتوي على رابط
     urls = re.findall(r'(https?://\S+)', event.message.message)
     
     if event.message.message == '/start':
-        await event.respond('مرحبًا! أرسل لي رابط الفيديو وسأقوم بتحميله لك.')
+        await event.respond(f'مرحبًا عزيزي {men} \n أرسل لي رابط الفيديو وسأقوم بتحميله لك')
     elif urls:
         url = urls[0]
-        await event.respond('جاري تحميل الفيديو...')
+        await event.respond('**جاري تحميل الفيديو...**')
         
         video_path = download_video(url)
         if video_path:
-            await event.respond(f'تم تحميل الفيديو بنجاح! المسار: {video_path}')
             await client.send_file(event.chat_id, video_path)
             os.remove(video_path)
-        else:
-            await event.respond('فشل في تحميل الفيديو.')
+            await event.respond(f'**تم تحميل الفيديو بنجاح✅**')
+            await event.respond('**فشل في تحميل الفيديو❌**')
 
 # بدء العميل
 client.start()
