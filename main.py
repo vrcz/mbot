@@ -40,8 +40,7 @@ async def handler(event):
     elif urls:
         url = urls[0]
         await event.respond('**جاري تحميل الفيديو...**')
-        await asyncio.sleep(2)
-        await status_message.delete()
+        
         
         video_path = download_video(url)
         if video_path:
@@ -51,6 +50,10 @@ async def handler(event):
             
         else:
             await event.respond('**فشل في تحميل الفيديو❌**')
+            if status_message:
+                await asyncio.sleep(2)
+                await status_message.delete()
+
         
 
 # بدء العميل
