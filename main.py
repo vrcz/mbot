@@ -48,6 +48,7 @@ async def handler(event):
             await event.respond(f'**تم تحميل الفيديو بنجاح✅**')
         else:
             await event.respond('**فشل في تحميل الفيديو❌**')
+        await status_message.delete()
 
 # بدء العميل
 client.start()
