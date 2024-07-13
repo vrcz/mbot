@@ -1,0 +1,18 @@
+{
+  "name": "telegram-video-downloader-bot",
+  "description": "Telegram bot.",
+  "env": {
+    "API_ID": {
+      "description": "Telegram API ID",
+      "required": true
+    },
+    "API_HASH": {
+      "description": "Telegram API Hash",
+      "required": true
+    },
+    "BOT_TOKEN": {
+      "description": "Telegram Bot Token",
+      "required": true
+    }
+  }
+}
