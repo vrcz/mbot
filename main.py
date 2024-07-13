@@ -2,7 +2,7 @@ import os
 from telethon import TelegramClient, events
 import yt_dlp
 import re
-
+import asyncio
 
 from config import API_ID, API_HASH, BOT_TOKEN
 
