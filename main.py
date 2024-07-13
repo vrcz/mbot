@@ -32,7 +32,10 @@ def download_video(url):
 async def handler(event):
     # تحقق مما إذا كانت الرسالة تحتوي على رابط
     urls = re.findall(r'(https?://\S+)', event.message.message)
-    if urls:
+    
+    if event.message.message == '/start':
+        await event.respond('مرحبًا! أرسل لي رابط الفيديو وسأقوم بتحميله لك.')
+    elif urls:
         url = urls[0]
         await event.respond('جاري تحميل الفيديو...')
         
