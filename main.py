@@ -2,14 +2,16 @@ import os
 from telethon import TelegramClient, events
 import yt_dlp
 import re
+import asyncio
 
-from config import API_ID, API_HASH, BOT_TOKEN
+from config import API_ID, API_HASH, BOT_TOKEN, REQUIRED_CHANNELS
 from stats import format_statistics, DEVELOPER_ID
 from database import add_user, add_message, get_statistics
 
 # إنشاء عميل Telegram
 client = TelegramClient('bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
 
+# دالة لتحميل الفيديو
 def download_video(url):
     ydl_opts = {
         'format': 'best',
@@ -26,6 +28,17 @@ def download_video(url):
         except Exception as e:
             print(f"Error downloading video: {e}")
             return None
+
+# دالة للتحقق من الاشتراك في القنوات المطلوبة
+async def check_subscription(user_id):
+    for channel in REQUIRED_CHANNELS:
+        try:
+            participant = await client.get_participant(channel, user_id)
+            if participant.participant.left:
+                return False
+        except:
+            return False
+    return True
 
 # حدث لمعالجة الأوامر
 @client.on(events.NewMessage)
@@ -44,6 +57,11 @@ async def handler(event):
     if event.message.message == '/start':
         await event.respond(f'مرحبًا عزيزي {men} \n أرسل لي رابط الفيديو وسأقوم بتحميله لك')
     elif urls:
+        # تحقق من الاشتراك في القنوات المطلوبة
+        if not await check_subscription(user_id):
+            await event.respond('يجب عليك الاشتراك في القنوات التالية لاستخدام هذا البوت:\n' + '\n'.join(REQUIRED_CHANNELS))
+            return
+        
         url = urls[0]
         status_message = await event.respond('**جاري تحميل الفيديو...**')
         
