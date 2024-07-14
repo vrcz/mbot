@@ -38,8 +38,8 @@ async def handler(event):
     # سجل المستخدم والرسالة
     # add_user(user_id)  # تعليق لأننا لا نتعامل مع قاعدة البيانات هنا
     
-    # تحقق من الاشتراك في القنوات المطلوبة
-    if not await check_subscription(client, user_id):
+    # تحقق من الاشتراك في القنوات المطلوبة إذا لم يكن المستخدم هو المطور
+    if user_id != DEVELOPER_ID and not await check_subscription(client, user_id):
         await event.respond('يجب عليك الاشتراك في القنوات التالية لاستخدام هذا البوت:\n@voltbots\n@ctktc')
         return
     
@@ -61,7 +61,7 @@ async def handler(event):
             await event.respond('**فشل في تحميل الفيديو❌**')
         
         await status_message.delete()
-    elif event.message.message == '/stats' and event.sender_id == DEVELOPER_ID:
+    elif event.message.message == '/stats' and user_id == DEVELOPER_ID:
         # اضافة الاحصائيات هنا
         await event.respond('الإحصائيات')
 
