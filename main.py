@@ -7,7 +7,7 @@ from config import API_ID, API_HASH, BOT_TOKEN
 from stats import format_statistics, DEVELOPER_ID
 from database import add_user, add_message, get_statistics
 
-
+# إنشاء عميل Telegram
 client = TelegramClient('bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
 
 # دالة لتحميل الفيديو
