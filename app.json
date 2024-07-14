@@ -1,18 +1,27 @@
 {
-  "name": "telegram-video-downloader-bot",
-  "description": "Telegram bot.",
+  "name": "my-telegram-bot",
+  "description": "A Telegram ",
+  "repository": "https://github.com/yourusername/yourrepository",
   "env": {
     "API_ID": {
-      "description": "Telegram API ID",
-      "required": true
+      "description": "API ID for your Telegram bot",
+      "value": "your_api_id"
     },
     "API_HASH": {
-      "description": "Telegram API Hash",
-      "required": true
+      "description": "API Hash for your Telegram bot",
+      "value": "your_api_hash"
     },
     "BOT_TOKEN": {
-      "description": "Telegram Bot Token",
-      "required": true
+      "description": "Bot token from BotFather",
+      "value": "your_bot_token"
+    },
+    "REQUIRED_CHANNELS": {
+      "description": "Comma-separated list of required channel usernames",
+      "value": "@channelusername1,@channelusername2"
+    },
+    "DEVELOPER_ID": {
+      "description": "Telegram user ID of the bot developer",
+      "value": "1373914665"
     }
   }
 }
