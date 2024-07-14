@@ -61,9 +61,10 @@ async def handler(event):
             await event.respond('**فشل في تحميل الفيديو❌**')
         
         await status_message.delete()
-    elif event.message.message == '/stats' and user_id == DEVELOPER_ID:
-        # اضافة الاحصائيات هنا
-        await event.respond('الإحصائيات')
+    elif event.message.message == '/stats' and event.sender_id == DEVELOPER_ID:
+        stats = get_statistics()
+        stats_message = await format_statistics(stats)
+        await event.respond(stats_message)
 
 # بدء العميل
 client.run_until_disconnected()
