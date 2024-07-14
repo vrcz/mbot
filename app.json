@@ -18,10 +18,6 @@
     "DEVELOPER_ID": {
       "description": "Developer's Telegram ID",
       "value": "your_developer_id"
-    },
-    "REQUIRED_CHANNELS": {
-      "description": "List of required channels",
-      "value": "channel_username1,channel_username2"
     }
   }
 }
