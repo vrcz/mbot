@@ -1,25 +1,29 @@
 import sqlite3
 from datetime import datetime
 
-conn = sqlite3.connect('bot_stats.db')
-cursor = conn.cursor()
+# إنشاء اتصال بقاعدة البيانات وإنشاء الجداول إذا لم تكن موجودة
+def initialize_db():
+    conn = sqlite3.connect('bot_stats.db')
+    cursor = conn.cursor()
 
-# إنشاء الجداول
-cursor.execute('''CREATE TABLE IF NOT EXISTS users (
-                    user_id INTEGER PRIMARY KEY,
-                    first_seen TIMESTAMP,
-                    last_seen TIMESTAMP
-                  )''')
+    cursor.execute('''CREATE TABLE IF NOT EXISTS users (
+                        user_id INTEGER PRIMARY KEY,
+                        first_seen TIMESTAMP,
+                        last_seen TIMESTAMP
+                      )''')
 
-cursor.execute('''CREATE TABLE IF NOT EXISTS messages (
-                    message_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    user_id INTEGER,
-                    chat_id INTEGER,
-                    timestamp TIMESTAMP,
-                    FOREIGN KEY(user_id) REFERENCES users(user_id)
-                  )''')
+    cursor.execute('''CREATE TABLE IF NOT EXISTS messages (
+                        message_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        user_id INTEGER,
+                        chat_id INTEGER,
+                        timestamp TIMESTAMP,
+                        FOREIGN KEY(user_id) REFERENCES users(user_id)
+                      )''')
 
-conn.commit()
+    conn.commit()
+    return conn, cursor
+
+conn, cursor = initialize_db()
 
 def add_user(user_id):
     now = datetime.now()
