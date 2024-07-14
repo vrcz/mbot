@@ -2,10 +2,10 @@ import os
 from telethon import TelegramClient, events
 import yt_dlp
 import re
-import asyncio
 
 from config import API_ID, API_HASH, BOT_TOKEN
-from stats import get_statistics, format_statistics, DEVELOPER_ID
+from stats import format_statistics, DEVELOPER_ID
+from database import add_user, add_message, get_statistics
 
 # إنشاء عميل Telegram
 client = TelegramClient('bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
@@ -31,8 +31,14 @@ def download_video(url):
 # حدث لمعالجة الأوامر
 @client.on(events.NewMessage)
 async def handler(event):
-    id = event.sender_id
-    men = f"[{event.sender.first_name}](tg://user?id={id})"
+    user_id = event.sender_id
+    chat_id = event.chat_id
+    men = f"[{event.sender.first_name}](tg://user?id={user_id})"
+    
+    # سجل المستخدم والرسالة
+    add_user(user_id)
+    add_message(user_id, chat_id)
+    
     # تحقق مما إذا كانت الرسالة تحتوي على رابط
     urls = re.findall(r'(https?://\S+)', event.message.message)
     
@@ -52,7 +58,7 @@ async def handler(event):
         
         await status_message.delete()
     elif event.message.message == '/stats' and event.sender_id == DEVELOPER_ID:
-        stats = await get_statistics(client)
+        stats = get_statistics()
         stats_message = await format_statistics(stats)
         await event.respond(stats_message)
 
