@@ -9,9 +9,9 @@ async def check_subscription(client: TelegramClient, user_id: int) -> bool:
         try:
             # نحاول الحصول على معلومات عن القناة
             entity = await client.get_entity(channel)
-            # نحاول الحصول على مشارك في القناة
-            participant = await client.get_participant(entity, user_id)
-            if not participant:
+            # نحاول الحصول على المشاركين في القناة والتحقق من وجود المستخدم بينهم
+            participants = await client.get_participants(entity)
+            if not any(participant.id == user_id for participant in participants):
                 return False
         except errors.rpcerrorlist.UserNotParticipantError:
             # المستخدم ليس مشارك في القناة
