@@ -1,18 +1,11 @@
 import os
-import json
+import re
 from telethon import TelegramClient, events
 import yt_dlp
-import re
 import asyncio
 
 from config import API_ID, API_HASH, BOT_TOKEN, DEVELOPER_ID
-from stats import format_statistics
-from database import add_user, add_message, get_statistics
-
-# قراءة القنوات المطلوبة من ملف app.json
-with open('app.json', 'r') as f:
-    app_config = json.load(f)
-    REQUIRED_CHANNELS = json.loads(app_config['env']['REQUIRED_CHANNELS']['value'])
+from check import check_subscription  # استيراد دالة التحقق من الاشتراك
 
 # إنشاء عميل Telegram
 client = TelegramClient('bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
@@ -35,18 +28,6 @@ def download_video(url):
             print(f"Error downloading video: {e}")
             return None
 
-# دالة للتحقق من الاشتراك في القنوات المطلوبة
-async def check_subscription(user_id):
-    for channel in REQUIRED_CHANNELS:
-        try:
-            participant = await client.get_participant(channel if channel.startswith('@') else f'@{channel}', user_id)
-            if not participant:
-                return False
-        except Exception as e:
-            print(f"Error checking subscription for channel {channel}: {e}")
-            return False
-    return True
-
 # حدث لمعالجة الأوامر
 @client.on(events.NewMessage)
 async def handler(event):
@@ -55,12 +36,11 @@ async def handler(event):
     men = f"[{event.sender.first_name}](tg://user?id={user_id})"
     
     # سجل المستخدم والرسالة
-    add_user(user_id)
-    add_message(user_id, chat_id)
+    # add_user(user_id)  # تعليق لأننا لا نتعامل مع قاعدة البيانات هنا
     
     # تحقق من الاشتراك في القنوات المطلوبة
-    if not await check_subscription(user_id):
-        await event.respond('يجب عليك الاشتراك في القنوات التالية لاستخدام هذا البوت:\n' + '\n'.join(REQUIRED_CHANNELS))
+    if not await check_subscription(client, user_id):
+        await event.respond('يجب عليك الاشتراك في القنوات التالية لاستخدام هذا البوت:\n@voltbots\n@ctktc')
         return
     
     # تحقق مما إذا كانت الرسالة تحتوي على رابط
@@ -82,9 +62,8 @@ async def handler(event):
         
         await status_message.delete()
     elif event.message.message == '/stats' and event.sender_id == DEVELOPER_ID:
-        stats = get_statistics()
-        stats_message = await format_statistics(stats)
-        await event.respond(stats_message)
+        # اضافة الاحصائيات هنا
+        await event.respond('الإحصائيات')
 
 # بدء العميل
 client.run_until_disconnected()
