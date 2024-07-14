@@ -1,4 +1,4 @@
-from telethon import TelegramClient
+from telethon import TelegramClient, errors
 
 # قائمة القنوات المطلوبة
 REQUIRED_CHANNELS = ['@voltbots', '@ctktc']
@@ -7,9 +7,15 @@ REQUIRED_CHANNELS = ['@voltbots', '@ctktc']
 async def check_subscription(client: TelegramClient, user_id: int) -> bool:
     for channel in REQUIRED_CHANNELS:
         try:
-            participant = await client.get_participant(channel, user_id)
+            # نحاول الحصول على معلومات عن القناة
+            entity = await client.get_entity(channel)
+            # نحاول الحصول على مشارك في القناة
+            participant = await client.get_participant(entity, user_id)
             if not participant:
                 return False
+        except errors.rpcerrorlist.UserNotParticipantError:
+            # المستخدم ليس مشارك في القناة
+            return False
         except Exception as e:
             print(f"Error checking subscription for channel {channel}: {e}")
             return False
