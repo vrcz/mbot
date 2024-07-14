@@ -13,7 +13,7 @@ client = TelegramClient('bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
 def download_video(url):
     ydl_opts = {
         'format': 'best',
-        'outtmpl': '%(title)s.%(ext)s',
+        'outtmpl': 'downloaded_video.%(ext)s',  # اسم ملف ثابت لتجنب مشكلة طول الاسم
         'noplaylist': True,
     }
 
@@ -41,20 +41,15 @@ async def handler(event):
         url = urls[0]
         status_message = await event.respond('**جاري تحميل الفيديو...**')
         
-        
         video_path = download_video(url)
         if video_path:
             await client.send_file(event.chat_id, video_path)
             os.remove(video_path)
             await event.respond(f'**تم تحميل الفيديو بنجاح✅**')
-            
         else:
             await event.respond('**فشل في تحميل الفيديو❌**')
         
-                
         await status_message.delete()
-
-        
 
 # بدء العميل
 client.start()
