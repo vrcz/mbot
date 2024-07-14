@@ -39,8 +39,8 @@ def download_video(url):
 async def check_subscription(user_id):
     for channel in REQUIRED_CHANNELS:
         try:
-            participant = await client.get_participants(channel)
-            if not any(p.id == user_id for p in participant):
+            participant = await client.get_participant(channel, user_id)
+            if not participant:
                 return False
         except Exception as e:
             print(f"Error checking subscription for channel {channel}: {e}")
