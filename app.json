@@ -1,27 +1,27 @@
 {
   "name": "my-telegram-bot",
-  "description": "A Telegram ",
-  "repository": "https://github.com/yourusername/yourrepository",
+  "description": "A Telegram bot to download videos",
+  "repository": "https://github.com/username/repository",
   "env": {
     "API_ID": {
-      "description": "API ID for your Telegram bot",
+      "description": "API ID for Telegram",
       "value": "your_api_id"
     },
     "API_HASH": {
-      "description": "API Hash for your Telegram bot",
+      "description": "API Hash for Telegram",
       "value": "your_api_hash"
     },
     "BOT_TOKEN": {
-      "description": "Bot token from BotFather",
+      "description": "Bot token for Telegram",
       "value": "your_bot_token"
     },
-    "REQUIRED_CHANNELS": {
-      "description": "Comma-separated list of required channel usernames",
-      "value": "@channelusername1,@channelusername2"
-    },
     "DEVELOPER_ID": {
-      "description": "Telegram user ID of the bot developer",
-      "value": "1373914665"
+      "description": "Developer's Telegram ID",
+      "value": "your_developer_id"
+    },
+    "REQUIRED_CHANNELS": {
+      "description": "List of required channels",
+      "value": "[\"channel_username1\", \"channel_username2\"]"
     }
   }
 }
