@@ -6,6 +6,7 @@ import asyncio
 
 from config import API_ID, API_HASH, BOT_TOKEN, DEVELOPER_ID
 from check import check_subscription  # استيراد دالة التحقق من الاشتراك
+from stats import format_statistics, DEVELOPER_ID
 from database import add_user, add_message, get_statistics
 
 # إنشاء عميل Telegram
