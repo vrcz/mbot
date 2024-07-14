@@ -4,8 +4,8 @@ import yt_dlp
 import re
 import asyncio
 
-from config import API_ID, API_HASH, BOT_TOKEN, REQUIRED_CHANNELS
-from stats import format_statistics, DEVELOPER_ID
+from config import API_ID, API_HASH, BOT_TOKEN, REQUIRED_CHANNELS, DEVELOPER_ID
+from stats import format_statistics
 from database import add_user, add_message, get_statistics
 
 # إنشاء عميل Telegram
@@ -33,10 +33,11 @@ def download_video(url):
 async def check_subscription(user_id):
     for channel in REQUIRED_CHANNELS:
         try:
-            participant = await client.get_participant(channel, user_id)
-            if participant.participant.left:
+            participant = await client.get_participants(channel, filter=client.iter_participants(user_id))
+            if not participant:
                 return False
-        except:
+        except Exception as e:
+            print(f"Error checking subscription for channel {channel}: {e}")
             return False
     return True
 
