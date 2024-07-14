@@ -21,7 +21,7 @@
     },
     "REQUIRED_CHANNELS": {
       "description": "List of required channels",
-      "value": "[\"channel_username1\", \"channel_username2\"]"
+      "value": "channel_username1,channel_username2"
     }
   }
 }
