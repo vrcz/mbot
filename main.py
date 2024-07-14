@@ -1,12 +1,18 @@
 import os
+import json
 from telethon import TelegramClient, events
 import yt_dlp
 import re
 import asyncio
 
-from config import API_ID, API_HASH, BOT_TOKEN, REQUIRED_CHANNELS, DEVELOPER_ID
+from config import API_ID, API_HASH, BOT_TOKEN, DEVELOPER_ID
 from stats import format_statistics
 from database import add_user, add_message, get_statistics
+
+# قراءة القنوات المطلوبة من ملف app.json
+with open('app.json', 'r') as f:
+    app_config = json.load(f)
+    REQUIRED_CHANNELS = json.loads(app_config['env']['REQUIRED_CHANNELS']['value'])
 
 # إنشاء عميل Telegram
 client = TelegramClient('bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
@@ -33,8 +39,8 @@ def download_video(url):
 async def check_subscription(user_id):
     for channel in REQUIRED_CHANNELS:
         try:
-            participant = await client.get_participants(channel, filter=client.iter_participants(user_id))
-            if not participant:
+            participant = await client.get_participants(channel)
+            if not any(p.id == user_id for p in participant):
                 return False
         except Exception as e:
             print(f"Error checking subscription for channel {channel}: {e}")
@@ -52,17 +58,17 @@ async def handler(event):
     add_user(user_id)
     add_message(user_id, chat_id)
     
+    # تحقق من الاشتراك في القنوات المطلوبة
+    if not await check_subscription(user_id):
+        await event.respond('يجب عليك الاشتراك في القنوات التالية لاستخدام هذا البوت:\n' + '\n'.join(REQUIRED_CHANNELS))
+        return
+    
     # تحقق مما إذا كانت الرسالة تحتوي على رابط
     urls = re.findall(r'(https?://\S+)', event.message.message)
     
     if event.message.message == '/start':
         await event.respond(f'مرحبًا عزيزي {men} \n أرسل لي رابط الفيديو وسأقوم بتحميله لك')
     elif urls:
-        # تحقق من الاشتراك في القنوات المطلوبة
-        if not await check_subscription(user_id):
-            await event.respond('يجب عليك الاشتراك في القنوات التالية لاستخدام هذا البوت:\n' + '\n'.join(REQUIRED_CHANNELS))
-            return
-        
         url = urls[0]
         status_message = await event.respond('**جاري تحميل الفيديو...**')
         
@@ -81,5 +87,4 @@ async def handler(event):
         await event.respond(stats_message)
 
 # بدء العميل
-client.start()
 client.run_until_disconnected()
