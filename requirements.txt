@@ -1,4 +1,3 @@
 telethon
 yt-dlp
 asyncio
-sqlite3
