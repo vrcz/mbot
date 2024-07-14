@@ -5,6 +5,7 @@ import re
 import asyncio
 
 from config import API_ID, API_HASH, BOT_TOKEN
+from stats import get_statistics, format_statistics, DEVELOPER_ID
 
 # إنشاء عميل Telegram
 client = TelegramClient('bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
@@ -50,6 +51,10 @@ async def handler(event):
             await event.respond('**فشل في تحميل الفيديو❌**')
         
         await status_message.delete()
+    elif event.message.message == '/stats' and event.sender_id == DEVELOPER_ID:
+        stats = await get_statistics(client)
+        stats_message = await format_statistics(stats)
+        await event.respond(stats_message)
 
 # بدء العميل
 client.start()
