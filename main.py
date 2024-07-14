@@ -39,7 +39,7 @@ def download_video(url):
 async def check_subscription(user_id):
     for channel in REQUIRED_CHANNELS:
         try:
-            participant = await client.get_participant(channel, user_id)
+            participant = await client.get_participant(channel if channel.startswith('@') else f'@{channel}', user_id)
             if not participant:
                 return False
         except Exception as e:
