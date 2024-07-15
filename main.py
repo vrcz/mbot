@@ -8,7 +8,7 @@ from config import API_ID, API_HASH, BOT_TOKEN, DEVELOPER_ID
 from check import check_subscription  # استيراد دالة التحقق من الاشتراك
 from storage import add_user, add_banned_user, add_message, get_statistics  # استيراد دوال التخزين
 
-# إنشاء عميل Telegram
+
 client = TelegramClient('bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
 
 # دالة لتحميل الفيديو
