@@ -6,8 +6,7 @@ import asyncio
 
 from config import API_ID, API_HASH, BOT_TOKEN, DEVELOPER_ID
 from check import check_subscription  # استيراد دالة التحقق من الاشتراك
-from stats import format_statistics, DEVELOPER_ID
-from database import add_user, add_message, get_statistics
+from storage import add_user, add_banned_user, add_message, get_statistics  # استيراد دوال التخزين
 
 # إنشاء عميل Telegram
 client = TelegramClient('bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
@@ -38,7 +37,8 @@ async def handler(event):
     men = f"[{event.sender.first_name}](tg://user?id={user_id})"
     
     # سجل المستخدم والرسالة
-    # add_user(user_id)  # تعليق لأننا لا نتعامل مع قاعدة البيانات هنا
+    add_user(user_id, is_group=event.is_group)
+    add_message(user_id)
     
     # تحقق من الاشتراك في القنوات المطلوبة إذا لم يكن المستخدم هو المطور
     if user_id != DEVELOPER_ID and not await check_subscription(client, user_id):
@@ -63,9 +63,9 @@ async def handler(event):
             await event.respond('**فشل في تحميل الفيديو❌**')
         
         await status_message.delete()
-    elif event.message.message == '/stats' and event.sender_id == DEVELOPER_ID:
-        stats = get_statistics()
-        stats_message = await format_statistics(stats)
+    elif event.message.message == '/stats' and user_id == DEVELOPER_ID:
+        # عرض الإحصائيات
+        stats_message = get_statistics()
         await event.respond(stats_message)
 
 # بدء العميل
